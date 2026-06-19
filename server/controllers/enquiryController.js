@@ -1,3 +1,5 @@
+const Enquiry = require("../models/Enquiry");
+
 const createEnquiry = async (req, res) => {
   try {
     const { name, email, phone } = req.body;
@@ -10,32 +12,27 @@ const createEnquiry = async (req, res) => {
       });
     }
 
-
-    // MongoDB integration can be added here later
-    const enquiryData = {
+    // Save to MongoDB
+    const newEnquiry = await Enquiry.create({
       name,
       email,
       phone,
-      createdAt: new Date(),
-    };
-
+    });
 
     return res.status(201).json({
       success: true,
       message: "Workshop enquiry submitted successfully",
-      data: enquiryData,
+      data: newEnquiry,
     });
 
   } catch (error) {
-
+    console.error("Error creating enquiry:", error);
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "Internal server error. Please try again later.",
     });
-
   }
 };
-
 
 module.exports = {
   createEnquiry,
